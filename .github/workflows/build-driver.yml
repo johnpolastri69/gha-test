@@ -34,6 +34,8 @@ jobs:
       - name: Build driver
         shell: bash
         run: |
+          sed -i 's|</TimeStampServer>|</TimeStampServer><ApiValidator_Enable>false</ApiValidator_Enable>|g' ./AmtPtpDeviceUsbUm/MagicTrackpad2PtpDevice.vcxproj
+          sed -i 's|</TimeStampServer>|</TimeStampServer><ApiValidator_Enable>false</ApiValidator_Enable>|g' ./AmtPtpHidFilter/AmtPtpHidFilter.vcxproj
           msbuild.exe ./AmtPtpDeviceUsbUm/MagicTrackpad2PtpDevice.vcxproj -p:Configuration=Release -p:Platform=x64
           msbuild.exe ./AmtPtpHidFilter/AmtPtpHidFilter.vcxproj -p:Configuration=Release -p:Platform=x64
           mkdir bin
