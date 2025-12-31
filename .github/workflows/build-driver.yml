@@ -37,6 +37,7 @@ jobs:
           msbuild.exe ./AmtPtpHidFilter/AmtPtpHidFilter.vcxproj -p:Configuration=Release -p:Platform=x64
           msbuild.exe ./AmtPtpDeviceUsbUm/MagicTrackpad2PtpDevice.vcxproj -p:Configuration=Release -p:Platform=ARM64
           msbuild.exe ./AmtPtpHidFilter/AmtPtpHidFilter.vcxproj -p:Configuration=Release -p:Platform=ARM64
+          msbuild.exe ./AmtPtpControlPanel/AmtPtpControlPanel.csproj -p:Configuration=Release -p:Platform=AnyCPU
           mkdir bin
           cp build/AmtPtpDevice_AMD64.inf bin/
           cp AmtPtpDeviceUsbUm/build/AmtPtpDeviceUsbUm/x64/Release/AmtPtpDeviceUsbUm.dll bin/
