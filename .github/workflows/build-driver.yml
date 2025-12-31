@@ -38,19 +38,13 @@ jobs:
           msbuild.exe ./AmtPtpDeviceUsbUm/MagicTrackpad2PtpDevice.vcxproj -p:Configuration=Release -p:Platform=ARM64
           msbuild.exe ./AmtPtpHidFilter/AmtPtpHidFilter.vcxproj -p:Configuration=Release -p:Platform=ARM64
           msbuild.exe ./AmtPtpControlPanel/AmtPtpControlPanel.csproj -p:Configuration=Release -p:Platform=AnyCPU
-          mkdir bin
-          cp build/AmtPtpDevice_AMD64.inf bin/
-          cp AmtPtpDeviceUsbUm/build/AmtPtpDeviceUsbUm/x64/Release/AmtPtpDeviceUsbUm.dll bin/
-          cp AmtPtpHidFilter/build/AmtPtpHidFilter/x64/Release/AmtPtpHidFilter.sys bin/
-          cp AmtPtpDeviceUsbUm/build/AmtPtpDeviceUsbUm/x64/Release/AmtPtpDeviceUsbUm.pdb bin/
-          cp AmtPtpHidFilter/build/AmtPtpHidFilter/x64/Release/AmtPtpHidFilter.pdb bin/
-          echo -e '.OPTION EXPLICIT ;\n.Set CabinetName1=driver.cab\n.Set CompressionType=LZX\n.Set CabinetFileCountThreshold=0\n.Set FolderFileCountThreshold=0\n.Set FolderSizeThreshold=0\n.Set MaxCabinetSize=0\n.Set MaxDiskFileCount=0\n.Set MaxDiskSize=0\n\n.Set DestinationDir= ;\nbin\AmtPtpDevice_AMD64.inf\nbin\AmtPtpDeviceUsbUm.dll\nbin\AmtPtpHidFilter.sys\nbin\AmtPtpDeviceUsbUm.pdb\nbin\AmtPtpHidFilter.pdb\n\n' > bin/driver.ddf
-          makecab -f bin/driver.ddf
-          mv disk1/driver.cab bin/driver.cab
+          mkdir result
+          cp AmtPtpControlPanel/bin/Release/AmtPtpControlPanel.exe result/
+          echo -e '.OPTION EXPLICIT\n.Set CabinetFileCountThreshold=0\n.Set FolderFileCountThreshold=0\n.Set FolderSizeThreshold=0\n.Set MaxCabinetSize=0\n.Set MaxDiskFileCount=0\n.Set MaxDiskSize=0\n.Set CompressionType=MSZIP\n.Set Cabinet=on\n.Set Compress=on\n.Set CabinetNameTemplate=result\\drivers.cab\n.Set DestinationDir=AMD64\nbuild\\AmtPtpDevice_AMD64.inf\tAmtPtpDevice.inf\nAmtPtpDeviceUsbUm\\build\\AmtPtpDeviceUsbUm\\x64\\Release\\AmtPtpDeviceUsbUm.dll\nAmtPtpHidFilter\\build\\AmtPtpHidFilter\\x64\\Release\\AmtPtpHidFilter.sys\nAmtPtpDeviceUsbUm\\build\\AmtPtpDeviceUsbUm\\x64\\Release\\AmtPtpDeviceUsbUm.pdb\nAmtPtpHidFilter\\build\\AmtPtpHidFilter\\x64\\Release\\AmtPtpHidFilter.pdb\n.Set DestinationDir=ARM64\nbuild\\AmtPtpDevice_ARM64.inf\tAmtPtpDevice.inf\nAmtPtpDeviceUsbUm\\build\\AmtPtpDeviceUsbUm\\ARM64\\Release\\AmtPtpDeviceUsbUm.dll\nAmtPtpHidFilter\\build\\AmtPtpHidFilter\\ARM64\\Release\\AmtPtpHidFilter.sys\nAmtPtpDeviceUsbUm\\build\\AmtPtpDeviceUsbUm\\ARM64\\Release\\AmtPtpDeviceUsbUm.pdb\nAmtPtpHidFilter\\build\\AmtPtpHidFilter\\ARM64\\Release\\AmtPtpHidFilter.pdb\n' > drivers.ddf
+          makecab -f drivers.ddf
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: drivers
-          path: bin/
-
+          path: result/
