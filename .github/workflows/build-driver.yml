@@ -1,7 +1,4 @@
-on:
-  push:
-    branches:
-      - main
+on: workflow_dispatch
 
 jobs:
   build-driver-amd64:
@@ -38,6 +35,8 @@ jobs:
           sed -i 's|</TimeStampServer>|</TimeStampServer><ApiValidator_Enable>false</ApiValidator_Enable>|g' ./AmtPtpHidFilter/AmtPtpHidFilter.vcxproj
           msbuild.exe ./AmtPtpDeviceUsbUm/MagicTrackpad2PtpDevice.vcxproj -p:Configuration=Release -p:Platform=x64
           msbuild.exe ./AmtPtpHidFilter/AmtPtpHidFilter.vcxproj -p:Configuration=Release -p:Platform=x64
+          msbuild.exe ./AmtPtpDeviceUsbUm/MagicTrackpad2PtpDevice.vcxproj -p:Configuration=Release -p:Platform=ARM64
+          msbuild.exe ./AmtPtpHidFilter/AmtPtpHidFilter.vcxproj -p:Configuration=Release -p:Platform=ARM64
           mkdir bin
           cp build/AmtPtpDevice_AMD64.inf bin/
           cp AmtPtpDeviceUsbUm/build/AmtPtpDeviceUsbUm/x64/Release/AmtPtpDeviceUsbUm.dll bin/
