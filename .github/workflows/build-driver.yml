@@ -1,34 +1,38 @@
 on: workflow_dispatch
 
 jobs:
-  build-driver-amd64:
-    name: Build Driver
+  build:
+    name: Build Driver Package and Control Panel
     permissions:
       contents: write
     runs-on: windows-latest
     steps:
-      
-      - uses: actions/checkout@v4
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
           repository: vitoplantamura/MagicTrackpad2ForWindows
           ref: ossign
 
-      #- name: Add msbuild to PATH
-      #  uses: microsoft/setup-msbuild@v2
+      - name: Create Source Tarball
+        run: |
+          tar -czf source-${{ github.sha }}.tar.gz --exclude='.git' .
 
-      #- name: Cache packages
-      #  uses: actions/cache@v4
-      #  with:
-      #    path: packages
-      #    key: ${{ runner.os }}-packages
+      - name: Upload Source Tarball
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-code-${{ github.sha }}
+          path: source-${{ github.sha }}.tar.gz
 
-      - name: Nuget install
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore NuGet Packages
         run: |
           nuget restore ./AmtPtpDeviceUsbUm/MagicTrackpad2PtpDevice.vcxproj -PackagesDirectory ${{ github.workspace }}\packages
           nuget restore ./AmtPtpHidFilter/AmtPtpHidFilter.vcxproj -PackagesDirectory ${{ github.workspace }}\packages
-          #Add-Content $env:GITHUB_PATH "${{ github.workspace }}\packages\Microsoft.Windows.WDK.x64.10.0.26100.6584\c\bin\10.0.26100.0\x64"    
-
-      - name: Build driver
+          
+      - name: Build
         shell: bash
         run: |
           sed -i 's|</TimeStampServer>|</TimeStampServer><ApiValidator_Enable>false</ApiValidator_Enable>|g' ./AmtPtpDeviceUsbUm/MagicTrackpad2PtpDevice.vcxproj
@@ -44,7 +48,7 @@ jobs:
           cp AmtPtpControlPanel/bin/Release/AmtPtpControlPanel.exe result/
           mv disk1/drivers.cab result/.
 
-      - name: Upload artifacts
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: drivers
