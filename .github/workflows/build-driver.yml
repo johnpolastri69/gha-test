@@ -13,14 +13,14 @@ jobs:
           repository: vitoplantamura/MagicTrackpad2ForWindows
           ref: ossign
 
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2
+      #- name: Add msbuild to PATH
+      #  uses: microsoft/setup-msbuild@v2
 
-      - name: Cache packages
-        uses: actions/cache@v4
-        with:
-          path: packages
-          key: ${{ runner.os }}-packages
+      #- name: Cache packages
+      #  uses: actions/cache@v4
+      #  with:
+      #    path: packages
+      #    key: ${{ runner.os }}-packages
 
       - name: Nuget install
         run: |
