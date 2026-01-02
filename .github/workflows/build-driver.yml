@@ -15,14 +15,17 @@ jobs:
           ref: ossign
 
       - name: Create Source Tarball
+        id: create_tarball
         run: |
-          tar -czf source-${{ github.sha }}.tar.gz --exclude='.git' .
+          COMMIT_SHA=$(git rev-parse HEAD)
+          echo "commit_sha=${COMMIT_SHA}" >> "$GITHUB_OUTPUT"
+          tar -czf "source-${COMMIT_SHA}.tar.gz" --exclude='.git' .
 
       - name: Upload Source Tarball
         uses: actions/upload-artifact@v4
         with:
-          name: source-code-${{ github.sha }}
-          path: source-${{ github.sha }}.tar.gz
+          name: source-code-${{ steps.create_tarball.outputs.commit_sha }}
+          path: source-${{ steps.create_tarball.outputs.commit_sha }}.tar.gz
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
