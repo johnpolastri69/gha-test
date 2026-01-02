@@ -15,6 +15,7 @@ jobs:
           ref: ossign
 
       - name: Create Source Tarball
+        shell: bash
         id: create_tarball
         run: |
           COMMIT_SHA=$(git rev-parse HEAD)
