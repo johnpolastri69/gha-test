@@ -10,9 +10,9 @@ jobs:
 
       - name: Checkout Code
         uses: actions/checkout@v4
-        with:
-          repository: vitoplantamura/MagicTrackpad2ForWindows
-          ref: ossign
+        #with:
+        #  repository: vitoplantamura/MagicTrackpad2ForWindows
+        #  ref: master
 
       - name: Create Source Tarball
         shell: bash
